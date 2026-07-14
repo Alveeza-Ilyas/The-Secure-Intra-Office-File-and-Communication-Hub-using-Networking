@@ -6,10 +6,10 @@ A lightweight, secure, and self-hosted intranet web application designed for fas
 
 ## 🚀 Features
 
-*   **🔒 Secure Access Control:** Simple server login gateway preventing unauthorized access outside the administrative channel[cite: 1, 4].
-*   **📂 Centralized File Hub:** Upload, store, and download shared office resources easily[cite: 2, 4]. 
-*   **💬 Integrated Chat System:** A client-side message terminal allowing quick communication between connected office staff[cite: 3, 4].
-*   **💻 Intranet Ready:** Configured to host on a local server (`0.0.0.0:5000`) so any device on the same local network (Wi-Fi/LAN) can securely connect[cite: 4].
+*   **Secure Access Control:** Simple server login gateway preventing unauthorized access outside the administrative channel[cite: 1, 4].
+*   **Centralized File Hub:** Upload, store, and download shared office resources easily[cite: 2, 4]. 
+*   **Integrated Chat System:** A client-side message terminal allowing quick communication between connected office staff[cite: 3, 4].
+*   **Intranet Ready:** Configured to host on a local server (`0.0.0.0:5000`) so any device on the same local network (Wi-Fi/LAN) can securely connect[cite: 4].
 
 ---
 
