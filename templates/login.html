@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Hub Portal • Authentication Gateway</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-screen-wrapper">
+
+    <!-- Ambient Glowing Orbs -->
+    <div class="glow-orb one"></div>
+    <div class="glow-orb two"></div>
+
+    <div class="login-glass-card">
+        <div class="login-emblem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+        </div>
+
+        <div class="login-titles">
+            <h1>Secure Intra-Office Hub</h1>
+            <p>Intranet File Sharing & Real-Time Team Communication</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-stack">
+                    {% for category, msg in messages %}
+                        <div class="flash-item flash-{{ category }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            <span>{{ msg }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="/login" method="POST" id="loginForm">
+            <div class="floating-input-group">
+                <label class="floating-label" for="username">Username</label>
+                <div class="input-with-icon">
+                    <svg class="left-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="login-text-input" 
+                        placeholder="Enter username (e.g. admin)" 
+                        required 
+                        autocomplete="username"
+                        autofocus
+                    >
+                </div>
+            </div>
+
+            <div class="floating-input-group">
+                <label class="floating-label" for="password">Password</label>
+                <div class="input-with-icon">
+                    <svg class="left-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="login-text-input" 
+                        placeholder="Enter password" 
+                        required 
+                        autocomplete="current-password"
+                    >
+                    <button type="button" class="eye-toggle-btn" id="togglePasswordBtn" title="Toggle password visibility">
+                        <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login-submit">
+                <span>Sign In to Office Hub</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14"/>
+                    <path d="m12 5 7 7-7 7"/>
+                </svg>
+            </button>
+        </form>
+
+        <div class="quick-credentials-strip">
+            <span style="font-weight: 700; color: var(--text-heading);">Quick 1-Click Fill:</span>
+            <div class="quick-btns-row">
+                <button type="button" class="quick-btn" onclick="fillCredentials('admin', '12345')">Admin (12345)</button>
+                <button type="button" class="quick-btn" onclick="fillCredentials('staff', '12345')">Staff (12345)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function fillCredentials(u, p) {
+            document.getElementById('username').value = u;
+            document.getElementById('password').value = p;
+        }
+
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        const passInput = document.getElementById('password');
+        if (toggleBtn && passInput) {
+            toggleBtn.addEventListener('click', () => {
+                const isPassword = passInput.getAttribute('type') === 'password';
+                passInput.setAttribute('type', isPassword ? 'text' : 'password');
+            });
+        }
+    </script>
+
+</body>
+</html>

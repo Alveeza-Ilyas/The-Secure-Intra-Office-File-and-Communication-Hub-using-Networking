@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Hub Dashboard • Secure Intra-Office Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="/dashboard" class="nav-brand">
+                <div class="brand-glyph">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+                    </svg>
+                </div>
+                <div class="brand-text-wrap">
+                    <span class="brand-title">IntraHub</span>
+                    <span class="brand-subtitle">Secure Office Network</span>
+                </div>
+            </a>
+
+            <div class="nav-divider"></div>
+
+            <div class="pulse-badge" title="Flask server running on local office intranet">
+                <span class="pulse-dot"></span>
+                <span>LAN Online • Port 5000</span>
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <a href="/chat" class="btn-nav-action btn-nav-chat">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
+                </svg>
+                <span>Team Chat Room</span>
+            </a>
+
+            <div class="user-badge">
+                <div class="user-avatar-gradient">
+                    {{ username[:2].upper() }}
+                </div>
+                <span class="user-name">{{ username }}</span>
+                <span class="user-role-pill">{{ role }}</span>
+            </div>
+
+            <a href="/logout" class="btn-nav-logout" title="Sign out of server">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="main-wrapper">
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-stack">
+                    {% for category, msg in messages %}
+                        <div class="flash-item flash-{{ category }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            <span>{{ msg }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Welcome Hero Banner -->
+        <section class="welcome-hero">
+            <div class="hero-text">
+                <h1>Welcome back, {{ username }}!</h1>
+                <p>All files uploaded here are instantly synced and downloadable by any authorized staff member connected to your local office Wi-Fi or LAN subnet.</p>
+            </div>
+            <div class="hero-cta">
+                <a href="/chat" class="hero-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>Open Live Chat</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 4 Colorful Metric Cards -->
+        <section class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-icon-wrapper blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                </div>
+                <div class="stat-details">
+                    <h4>Shared Files</h4>
+                    <div class="stat-number">{{ total_files }}</div>
+                    <span class="stat-subtext">Active repository items</span>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon-wrapper emerald">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                        <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>
+                    </svg>
+                </div>
+                <div class="stat-details">
+                    <h4>Storage Used</h4>
+                    <div class="stat-number">{{ total_storage }}</div>
+                    <span class="stat-subtext">Disk space occupied</span>
+                </div>
+            </div>
+
+            <a href="/chat" class="stat-box" style="text-decoration: none; color: inherit; cursor: pointer;" title="Open Team Chat Room">
+                <div class="stat-icon-wrapper purple">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                <div class="stat-details">
+                    <h4>Team Messages</h4>
+                    <div class="stat-number">{{ total_messages }}</div>
+                    <span class="stat-subtext" style="color: var(--accent-purple); font-weight: 600;">Open live chat &rarr;</span>
+                </div>
+            </a>
+
+            <div class="stat-box">
+                <div class="stat-icon-wrapper teal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                </div>
+                <div class="stat-details">
+                    <h4>Network Mode</h4>
+                    <div class="stat-number" style="font-size: 19px; font-family: var(--font-mono);">0.0.0.0</div>
+                    <span class="stat-subtext">LAN broadcast ready</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Grid: Upload Panel + Repository Table -->
+        <div class="workspace-grid">
+
+            <!-- File Upload Panel -->
+            <section class="card-panel">
+                <div class="card-panel-header">
+                    <div class="panel-heading">
+                        <div class="panel-heading-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                        </div>
+                        <span>Upload Office File</span>
+                    </div>
+                </div>
+
+                <div class="card-panel-body">
+                    <form action="/upload" method="POST" enctype="multipart/form-data" id="uploadForm">
+                        <div class="upload-zone" id="dropzone">
+                            <div class="upload-cloud-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+                                    <path d="M12 12v9"/>
+                                    <path d="m8 16 4-4 4 4"/>
+                                </svg>
+                            </div>
+                            <div class="upload-main-text">Drag & drop file here</div>
+                            <div class="upload-sub-text">or click to browse from computer (Max 50 MB)</div>
+                            <input type="file" name="file" id="fileInput" class="hidden-file-input" required>
+                        </div>
+
+                        <!-- Selected File Preview Chip -->
+                        <div class="file-selection-chip" id="filePreviewChip">
+                            <div class="chip-row">
+                                <div style="display: flex; align-items: baseline; gap: 8px; overflow: hidden;">
+                                    <span class="chip-name" id="chipFileName">file.txt</span>
+                                    <span class="chip-size" id="chipFileSize">0 KB</span>
+                                </div>
+                                <button type="button" id="clearFileBtn" style="background: none; border: none; cursor: pointer; color: #ef4444; font-size: 18px; font-weight: bold; line-height: 1;" title="Remove selected file">&times;</button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-upload-submit" id="uploadSubmitBtn" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"/>
+                                <path d="m12 5 7 7-7 7"/>
+                            </svg>
+                            <span>Share File to Hub</span>
+                        </button>
+                    </form>
+
+                    <div class="network-notice">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4"/>
+                            <path d="M12 8h.01"/>
+                        </svg>
+                        <span>Uploaded files can be downloaded instantly by all devices on your office Wi-Fi network.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Office File Repository Table -->
+            <section class="card-panel">
+                <div class="card-panel-header">
+                    <div class="panel-heading">
+                        <div class="panel-heading-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+                            </svg>
+                        </div>
+                        <span>Shared Office Repository</span>
+                    </div>
+                    <span class="files-count-badge" id="totalFilesBadge">{{ total_files }} Files Available</span>
+                </div>
+
+                <!-- Instant Search Toolbar -->
+                <div class="table-filter-bar">
+                    <div class="search-container">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input 
+                            type="text" 
+                            id="fileSearchInput" 
+                            class="search-input-field" 
+                            placeholder="Search by file name or uploader..." 
+                            autocomplete="off"
+                        >
+                    </div>
+                    <span style="font-size: 12px; color: var(--text-muted);" id="filterStatusText">
+                        Showing all {{ total_files }} items
+                    </span>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Size</th>
+                                <th>Uploaded By</th>
+                                <th>Timestamp</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filesTableBody">
+                            {% for file in files %}
+                            <tr class="file-row" data-filename="{{ file.original_name }}" data-uploader="{{ file.uploaded_by }}">
+                                <td>
+                                    <div class="file-info-cell">
+                                        {% set name_lower = file.original_name.lower() %}
+                                        {% if name_lower.endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp')) %}
+                                        <div class="file-badge-icon image" title="Image File">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                                                <circle cx="9" cy="9" r="2"/>
+                                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                                            </svg>
+                                        </div>
+                                        {% elif name_lower.endswith('.pdf') %}
+                                        <div class="file-badge-icon pdf" title="PDF Document">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                                <polyline points="14 2 14 8 20 8"/>
+                                            </svg>
+                                        </div>
+                                        {% elif name_lower.endswith(('.zip', '.rar', '.7z', '.tar', '.gz')) %}
+                                        <div class="file-badge-icon archive" title="Compressed Archive">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                                                <path d="m3.3 7 8.7 5 8.7-5"/>
+                                                <path d="M12 22V12"/>
+                                            </svg>
+                                        </div>
+                                        {% elif name_lower.endswith(('.py', '.js', '.html', '.css', '.json', '.sql', '.sh', '.cpp', '.c', '.java')) %}
+                                        <div class="file-badge-icon code" title="Source Code">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="16 18 22 12 16 6"/>
+                                                <polyline points="8 6 2 12 8 18"/>
+                                            </svg>
+                                        </div>
+                                        {% elif name_lower.endswith(('.doc', '.docx', '.txt', '.rtf')) %}
+                                        <div class="file-badge-icon doc" title="Text Document">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                                <polyline points="14 2 14 8 20 8"/>
+                                            </svg>
+                                        </div>
+                                        {% else %}
+                                        <div class="file-badge-icon generic" title="File">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                                <polyline points="14 2 14 8 20 8"/>
+                                            </svg>
+                                        </div>
+                                        {% endif %}
+                                        <span class="file-main-name">{{ file.original_name }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="file-size-tag">{{ file.file_size }}</span>
+                                </td>
+                                <td>
+                                    <span class="author-pill">{{ file.uploaded_by }}</span>
+                                </td>
+                                <td>
+                                    <span class="timestamp-text">{{ file.upload_time }}</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <div class="actions-cell">
+                                        <a 
+                                            href="{{ url_for('download_file', filename=file.filename) }}" 
+                                            class="action-round-btn" 
+                                            title="Download File"
+                                        >
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                <polyline points="7 10 12 15 17 10"/>
+                                                <line x1="12" y1="15" x2="12" y2="3"/>
+                                            </svg>
+                                        </a>
+
+                                        <button 
+                                            type="button" 
+                                            class="action-round-btn" 
+                                            onclick="copyDownloadLink(this, '{{ url_for('download_file', filename=file.filename) }}')"
+                                            title="Copy Download Link"
+                                        >
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                                            </svg>
+                                        </button>
+
+                                        <form 
+                                            action="{{ url_for('delete_file', file_id=file.id) }}" 
+                                            method="POST" 
+                                            style="display: inline;"
+                                            onsubmit="return confirm('Are you sure you want to delete {{ file.original_name }}?');"
+                                        >
+                                            <button type="submit" class="action-round-btn danger" title="Delete File">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M3 6h18"/>
+                                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5">
+                                    <div class="empty-state-box">
+                                        <div class="empty-state-graphic">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+                                            </svg>
+                                        </div>
+                                        <div style="font-weight: 700; font-size: 15px; color: var(--text-heading); margin-bottom: 4px;">No Files Uploaded Yet</div>
+                                        <p style="font-size: 13px;">Drag & drop a file in the left panel to share it with your team.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div>The Secure Intra-Office File & Communication Hub</div>
+        <div style="font-family: var(--font-mono); font-size: 11.5px; color: var(--primary);">Intranet LAN Mode • 0.0.0.0:5000</div>
+    </footer>
+
+    <!-- Toast Host -->
+    <div class="toast-host" id="toastContainer"></div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
