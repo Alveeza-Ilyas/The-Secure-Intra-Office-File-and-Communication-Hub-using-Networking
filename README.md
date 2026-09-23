@@ -4,7 +4,7 @@ A lightweight, secure, and self-hosted intranet web application designed for fas
 
 ---
 
-## 📁 Project Directory Structure (Konsi file kis folder mein honi chahiye)
+## Project Directory Structure (Konsi file kis folder mein honi chahiye)
 
 Flask application ke theek se chalne ke liye files is tarah organize honi chahiye:
 
@@ -34,7 +34,7 @@ The-Secure-Intra-Office-File-and-Communication-Hub/
 
 ---
 
-## ⚡ How to Run the Application (Chalanay Ka Tareeqa)
+## How to Run the Application (Chalanay Ka Tareeqa)
 
 ### Option 1: 1-Click Run on Windows (Sab se asaan)
 Project folder mein mojood **`run.bat`** file par double-click karein:
@@ -59,11 +59,11 @@ Project folder mein mojood **`run.bat`** file par double-click karein:
    http://127.0.0.1:5000/
    ```
 
-> ⚠️ **Important Note:** HTML files ko direct double-click karke (`file:///...`) browser mein open **mat** karein. Flask website hamesha `python app.py` chala kar `http://127.0.0.1:5000` ke zariye browser mein open hoti hai.
+> **Important Note:** HTML files ko direct double-click karke (`file:///...`) browser mein open **mat** karein. Flask website hamesha `python app.py` chala kar `http://127.0.0.1:5000` ke zariye browser mein open hoti hai.
 
 ---
 
-## 🔑 Default Login Credentials (Login Details)
+## Default Login Credentials (Login Details)
 
 Hub mein login karne ke liye ye credentials istemal karein:
 
@@ -77,7 +77,7 @@ Hub mein login karne ke liye ye credentials istemal karein:
 
 ---
 
-## 🌐 Other Office Devices se Connect Karna (LAN / Wi-Fi)
+## Other Office Devices se Connect Karna (LAN / Wi-Fi)
 
 Agar doosray office computer ya mobile se connect karna ho:
 1. Server walay computer ka Local IP address check karein (CMD mein `ipconfig` likhein, maslan: `192.168.1.50`).
@@ -89,7 +89,7 @@ Agar doosray office computer ya mobile se connect karna ho:
 
 ---
 
-## 🛠️ Features Included
+## Features Included
 
 1. **Integrated SQLite Database (`database.db`):**
    - `users`: Logins and role management.
